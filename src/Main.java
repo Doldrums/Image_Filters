@@ -90,6 +90,36 @@ public class Main {
         return mass;
     }
 
+    public static int[][] MaxBrightness(int mass[][]){
+        Color[] pixel=new Color[9];
+        int[] R=new int[9];
+        int[] B=new int[9];
+        int[] G=new int[9];
+        for(int i=1;i<mass.length-1;i++)
+            for(int j=1;j<mass.length-1;j++)
+            {
+                pixel[0]=new Color(mass[i-1][j-1]);
+                pixel[1]=new Color(mass[i-1][j]);
+                pixel[2]=new Color(mass[i-1][j+1]);
+                pixel[3]=new Color(mass[i][j+1]);
+                pixel[4]=new Color(mass[i+1][j+1]);
+                pixel[5]=new Color(mass[i+1][j]);
+                pixel[6]=new Color(mass[i+1][j-1]);
+                pixel[7]=new Color(mass[i][j-1]);
+                pixel[8]=new Color(mass[i][j]);
+                for(int k=0;k<9;k++){
+                    R[k]=pixel[k].getRed();
+                    B[k]=pixel[k].getBlue();
+                    G[k]=pixel[k].getGreen();
+                }
+                Arrays.sort(R);
+                Arrays.sort(G);
+                Arrays.sort(B);
+                mass[i][j] = new Color(R[8],B[8],G[8]).getRGB();
+            }
+
+        return mass;
+    }
 
 
 
