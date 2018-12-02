@@ -122,6 +122,45 @@ public class Main {
     }
 
 
+    public static double[][] GeometricFilter(double mass[][]){
+
+        double[][] mass1= new double[mass.length-2][mass.length-2];//объявляем массив ,в котором будут храниться измененные пиксели,его кол-ва строк и столбцов на 2 меньше чем у первого массива
+        for(int i=1;i<mass.length-1;i++)
+            for(int j=1;j<mass.length-1;j++) {
+                mass1[i-1][j-1]=Math.pow(mass[i-1][j-1]*mass[i-1][j]*mass[i-1][j+1]*mass[i][j+1]*mass[i+1][j+1]*mass[i+1][j]*mass[i+1][j-1]*mass[i][j-1]*mass[i][j],1.0/9);
+                for(int k=1;k<mass.length;k++){
+                    for (int l = 1; l < mass.length; l++) {
+                        mass[i][j]=mass1[i-1][j-1];
+                    }
+                }
+            }
+
+        return mass;
+    }
+
+    public static double Sredn(int mass){
+        Color pixel;
+        int R=0;
+        int B=0;
+        int G=0;
+        double Y=0;
+        pixel=new Color(mass);
+        R=pixel.getRed();
+        B=pixel.getBlue();
+        G=pixel.getGreen();
+
+        Y=0.299*R+0.587*G+0.114*B;
+
+
+
+
+        return Y;
+
+
+
+    }
+
+
 
 
 
