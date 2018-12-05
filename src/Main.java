@@ -150,13 +150,60 @@ public class Main {
         G=pixel.getGreen();
 
         Y=0.299*R+0.587*G+0.114*B;
-
-
-
-
         return Y;
 
+    }
 
+    public static double Max(int mass[][]){
+
+        double max=0;
+        int maxx=0;
+        int maxy=0;
+        for (int i = 0; i <mass.length ; i++) {
+            for (int j = 0; j <mass[i].length ; j++) {
+                int R = 0;
+                int B = 0;
+                int G = 0;
+                double Y = 0;
+                Color pixel = new Color(mass[i][j]);
+                R = pixel.getRed();
+                B = pixel.getBlue();
+                G = pixel.getGreen();
+                Y = 0.299 * R + 0.587 * G + 0.114 * B;
+                if (Y >= max) {
+                    max = Y;
+                    maxx=i;
+                    maxy=j;
+                }
+            }
+        }
+        return mass[maxx][maxy];
+
+    }
+    public static double Min(int mass[][]){
+
+        double max=0;
+        int maxx=0;
+        int maxy=0;
+        for (int i = 0; i <mass.length ; i++) {
+            for (int j = 0; j <mass[i].length ; j++) {
+                int R = 0;
+                int B = 0;
+                int G = 0;
+                double Y = 0;
+                Color pixel = new Color(mass[i][j]);
+                R = pixel.getRed();
+                B = pixel.getBlue();
+                G = pixel.getGreen();
+                Y = 0.299 * R + 0.587 * G + 0.114 * B;
+                if (Y <= max) {
+                    max = Y;
+                    maxx=i;
+                    maxy=j;
+                }
+            }
+        }
+        return mass[maxx][maxy];
 
     }
 
