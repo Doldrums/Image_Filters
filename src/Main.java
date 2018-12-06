@@ -12,13 +12,13 @@ public class Main {
         str = in.nextLine();
         int F = in.nextInt();
         int D = in.nextInt();
-        if (F==2&&D==1) System.out.println(Max(ArifmeticFilter(MedianFilter(Exchange(str, n ,m))))+"  " +Min(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));
+        if (F==2&&D==1) System.out.println(Max(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));//+"  " +Min(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));
         if (F==2&&D==2) System.out.println(Max(Sredn(MedianFilter(Exchange(str, n ,m))))+Min(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));
-        // if (F==2&&D==3) ArifmeticFilter(MedianFilter(Exchange(str, n ,m)));
+        if (F==2&&D==3) ArifmeticFilter(MedianFilter(Exchange(str, n ,m)));
         if (F==2&&D==4) System.out.println(Max(MaxBrightness(MedianFilter(Exchange(str, n ,m))))+Min(ArifmeticFilter(MaxBrightness(MedianFilter(Exchange(str, n ,m))))));
         if (F==1&&D==1) System.out.println(Max(ArifmeticFilter(GeometricFilter(Exchange(str, n ,m))))+Min(ArifmeticFilter(GeometricFilter(Exchange(str, n ,m)))));
         if (F==1&&D==2) System.out.println(Max(Sredn(GeometricFilter(Exchange(str, n ,m))))+Min(Sredn(GeometricFilter(Exchange(str, n ,m)))));
-        // if (F==1&&D==3) ArifmeticFilter(GeometricFilter(Exchange(str, n ,m)));
+        if (F==1&&D==3) ArifmeticFilter(GeometricFilter(Exchange(str, n ,m)));
         if (F==1&&D==4) System.out.println(Max(MaxBrightness(GeometricFilter(Exchange(str, n ,m))))+Min((MaxBrightness(GeometricFilter(Exchange(str, n ,m))))));
 
     }
@@ -38,6 +38,12 @@ public class Main {
         for (int i = 0; i < pixels_str.length; i++) {              //to array of hex
             for (int j = 0; j < pixels_str[i].length; j++) {
                 pixels[i][j]= Integer.parseInt(pixels_str[i][j], 16);
+            }
+        }
+        System.out.println("Полученный массив");
+        for (int i = 0; i < pixels.length; i++) {
+            for (int j = 0; j < pixels[i].length; j++) {
+               System.out.print(pixels[i][j]+ " ");
             }
         }
         return pixels;
@@ -70,7 +76,13 @@ public class Main {
                 Arrays.sort(B);
                 mass[i][j] = new Color(R[4],B[4],G[4]).getRGB();
             }
-
+        System.out.println();
+        System.out.println("Медианный фильтр");
+        for (int i = 0; i < mass.length; i++) {              //to array of hex
+            for (int j = 0; j < mass[i].length; j++) {
+                System.out.print(mass[i][j] + " ");
+            }
+        }
         return mass;
     }
 
@@ -91,6 +103,16 @@ public class Main {
                 P=(R[0]+B[0]+G[0])/3;
                 mass[i][j] = P;
             }
+
+        System.out.println();
+        System.out.println("Арифметический фильтр");
+        for (int i = 0; i < mass.length; i++) {              //to array of hex
+            for (int j = 0; j < mass[i].length; j++) {
+                System.out.print(mass[i][j] + " ");
+            }
+        }
+
+
         return mass;
     }
 
