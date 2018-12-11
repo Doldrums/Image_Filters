@@ -9,10 +9,26 @@ public class Main {
         int n = in.nextInt();
         int m = in.nextInt();
         String str = in.nextLine();
-        str = in.nextLine();
-        int F = in.nextInt();
-        int D = in.nextInt();
-        if (F==2&&D==1) System.out.println(Max(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));//+"  " +Min(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));
+        str = in.nextLine(); //считываем набор пикселей в 16-ой системе
+
+        /*
+        F  может принимать следующие значения:
+
+        1 - фильтр, основанный на вычислении среднего геометрического;
+        2 - медианный фильтр.
+
+         D  может принимать следующие значения:
+
+        1 - использование cреднего арифметического;
+        2 - использование средневзвешенного;
+        3 - использование ближайшей точки на нейтральной оси;
+        4 - определение величины яркости.
+         */
+
+
+        int F = in.nextInt();       //определяем алгоритм подавления шума
+        int D = in.nextInt();       //определяем алгоритм обесцвечивания
+        if (F==2&&D==1) System.out.println(Min(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));//+"  " +Min(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));
         if (F==2&&D==2) System.out.println(Max(Sredn(MedianFilter(Exchange(str, n ,m))))+Min(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));
         if (F==2&&D==3) ArifmeticFilter(MedianFilter(Exchange(str, n ,m)));
         if (F==2&&D==4) System.out.println(Max(MaxBrightness(MedianFilter(Exchange(str, n ,m))))+Min(ArifmeticFilter(MaxBrightness(MedianFilter(Exchange(str, n ,m))))));
@@ -23,33 +39,55 @@ public class Main {
 
     }
 
+
+    //ПЕРЕВОД СТРОКИ ШЕСТНАДЦАТИРИЧНЫХ СИМВОЛОВ В ДВУМЕРНЫЙ ДЕСЯТИЧНЫЙ МАССИВ
     public static  int[][] Exchange(String str, int n, int m) {
         String[][] pixels_str = new String[n][m];
         int[][] pixels = new int[n][m];
         int k=0;
-        String[] ary = str.split(" ");
-        for (int i = 0; i < pixels_str.length; i++) {           //to array of strings
+        String[] ary = str.split(" ");  //строка в одномерный массив строк
+
+
+        for (int i = 0; i < pixels_str.length; i++) {           //одномерный массив строк в двумерный массив строк
             for (int j = 0; j < pixels_str[i].length; j++) {
                 pixels_str[i][j] = ary[k];
                 k++;
 
             }
         }
-        for (int i = 0; i < pixels_str.length; i++) {              //to array of hex
+
+
+        for (int i = 0; i < pixels_str.length; i++) {
             for (int j = 0; j < pixels_str[i].length; j++) {
                 pixels[i][j]= Integer.parseInt(pixels_str[i][j], 16);
+                //двумерный массив строк в двумерный массив десятичных чисел
             }
         }
-        System.out.println("Полученный массив");
+
+
+
+
+        System.out.println("Полученный массив");      //просто проверка
         for (int i = 0; i < pixels.length; i++) {
             for (int j = 0; j < pixels[i].length; j++) {
                System.out.print(pixels[i][j]+ " ");
             }
         }
         return pixels;
+
+
     }
 
-    public static int[][] MedianFilter(int mass[][])  {
+
+    //ФИЛЬТРЫ НАПРАВЛЕННЫЕ НА ПОДАВЛЕНИЕ ШУМА
+    public static int[][] MedianFilter(int mass[][])  {   //медианный фильтр
+
+        /*
+        Захватываем цвет 8 пикселей вокруг главного пикселя. Включая главный пиксель, будет 9 пикселей.
+  Берем значения R, G, B каждого пикселя и помещаем их в массив. Сортируем массивы. Получаем среднее значение массива,
+ какой будет медиана значений цвета в этих 9 пикселях. Устанавливаем цвет в главный пиксель.
+*/
+
         Color[] pixel=new Color[9];
         int[] R=new int[9];
         int[] B=new int[9];
@@ -71,23 +109,55 @@ public class Main {
                     B[k]=pixel[k].getBlue();
                     G[k]=pixel[k].getGreen();
                 }
+
                 Arrays.sort(R);
                 Arrays.sort(G);
                 Arrays.sort(B);
-                mass[i][j] = new Color(R[4],B[4],G[4]).getRGB();
+
+                mass[i][j] = new Color(R[4],G[4],B[4]).getRGB(); // вот тут основная проблема
+
+                mass[i][j]= Integer.parseInt(Integer.toHexString(Math.abs(mass[i][j])).substring(2,7)); //попытка её решить
+
             }
+
+
+        //проверка
         System.out.println();
         System.out.println("Медианный фильтр");
-        for (int i = 0; i < mass.length; i++) {              //to array of hex
+        for (int i = 0; i < mass.length; i++) {
             for (int j = 0; j < mass[i].length; j++) {
                 System.out.print(mass[i][j] + " ");
             }
         }
         return mass;
     }
+    public static int[][] GeometricFilter(int mass[][]){  //геометрический фильтр
+        /*Алгоритм фильтра перемножает все значения пикселей плавающего окна и затем вычисляет корень от полученного числа.
+Степень корня определяется размером плавающего окна.*/
+
+        int[][] mass1= new int[mass.length-2][mass.length-2];
+        final int z = 1/9;
+        for(int i=1;i<mass.length-1;i++)
+            for(int j=1;j<mass.length-1;j++) {
+                mass1[i-1][j-1]= (int) Math.pow(mass[i-1][j-1]*mass[i-1][j]*mass[i-1][j+1]*mass[i][j+1]*mass[i+1][j+1]*mass[i+1][j]*mass[i+1][j-1]*mass[i][j-1]*mass[i][j],z);
+                for(int k=1;k<mass.length;k++){
+                    for (int l = 1; l < mass.length; l++) {
+                        mass[i][j]=mass1[i-1][j-1];
+                    }
+                }
+            }
+
+        return mass;
+    }
 
 
-    public static int[][] ArifmeticFilter(int mass[][]){
+
+
+    //ФИЛЬТРЫ НАПРАВЛЕННЫЕ НА ОБСЦВЕЧИВАНИЕ
+    public static int[][] ArifmeticFilter(int mass[][]){ //арифметический фильтр
+
+        /*Яркость итогового серого пикселя вычисляется как среднее арифметическое трех цветовых каналов */
+
         Color[] pixel=new Color[9];
         int P;
         int[] R=new int[9];
@@ -104,19 +174,21 @@ public class Main {
                 mass[i][j] = P;
             }
 
+        //Проверка
         System.out.println();
         System.out.println("Арифметический фильтр");
-        for (int i = 0; i < mass.length; i++) {              //to array of hex
+        for (int i = 0; i < mass.length; i++) {
             for (int j = 0; j < mass[i].length; j++) {
                 System.out.print(mass[i][j] + " ");
             }
         }
+        System.out.println();
 
 
         return mass;
     }
-
-    public static int[][] MaxBrightness(int mass[][]){
+    public static int[][] MaxBrightness(int mass[][]){ //фильтр основанный на определении величины яркости
+        /* Величина яркости определяется как максимальная интенсивость одной из компонент RGB:*/
         Color[] pixel=new Color[9];
         int[] R=new int[9];
         int[] B=new int[9];
@@ -146,26 +218,7 @@ public class Main {
 
         return mass;
     }
-
-
-    public static int[][] GeometricFilter(int mass[][]){
-
-        int[][] mass1= new int[mass.length-2][mass.length-2];
-        final int z = 1/9;
-        for(int i=1;i<mass.length-1;i++)
-            for(int j=1;j<mass.length-1;j++) {
-                mass1[i-1][j-1]= (int) Math.pow(mass[i-1][j-1]*mass[i-1][j]*mass[i-1][j+1]*mass[i][j+1]*mass[i+1][j+1]*mass[i+1][j]*mass[i+1][j-1]*mass[i][j-1]*mass[i][j],z);
-                for(int k=1;k<mass.length;k++){
-                    for (int l = 1; l < mass.length; l++) {
-                        mass[i][j]=mass1[i-1][j-1];
-                    }
-                }
-            }
-
-        return mass;
-    }
-
-    public static int[][] Sredn(int mass[][]){
+    public static int[][] Sredn(int mass[][]){ //фильтр на основе средневзвешенного
         int R;
         int B;
         int G;
@@ -182,6 +235,9 @@ public class Main {
         return mass;
     }
 
+
+
+    //НА ВЫХОДЕ ПОЛУЧАЕМ МАКС И МИН ЯРКОСТЬ
     public static int Max(int mass[][]){
 
         double max=0;
@@ -234,7 +290,6 @@ public class Main {
         return (int)mass[maxx][maxy];
 
     }
-
 
 
 
