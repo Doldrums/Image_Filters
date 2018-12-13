@@ -28,14 +28,14 @@ public class Main {
 
         int F = in.nextInt();       //определяем алгоритм подавления шума
         int D = in.nextInt();       //определяем алгоритм обесцвечивания
-        if (F==2&&D==1) System.out.println(/*Min(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));//+"  " +*/Max(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));
-        if (F==2&&D==2) System.out.println(Max(Sredn(MedianFilter(Exchange(str, n ,m))))+Min(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));
+        if (F==2&&D==1) System.out.println(Min(ArifmeticFilter(MedianFilter(Exchange(str, n ,m))))+"  " +Max(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));
+        if (F==2&&D==2) System.out.println(Min(Sredn(MedianFilter(Exchange(str, n ,m))))+"  " +Max(ArifmeticFilter(MedianFilter(Exchange(str, n ,m)))));
         if (F==2&&D==3) ArifmeticFilter(MedianFilter(Exchange(str, n ,m)));
-        if (F==2&&D==4) System.out.println(Max(MaxBrightness(MedianFilter(Exchange(str, n ,m))))+Min(ArifmeticFilter(MaxBrightness(MedianFilter(Exchange(str, n ,m))))));
-        if (F==1&&D==1) System.out.println(Max(ArifmeticFilter(GeometricFilter(Exchange(str, n ,m))))+Min(ArifmeticFilter(GeometricFilter(Exchange(str, n ,m)))));
-        if (F==1&&D==2) System.out.println(Max(Sredn(GeometricFilter(Exchange(str, n ,m))))+Min(Sredn(GeometricFilter(Exchange(str, n ,m)))));
+        if (F==2&&D==4) System.out.println(Min(MaxBrightness(MedianFilter(Exchange(str, n ,m))))+"  " +Max(ArifmeticFilter(MaxBrightness(MedianFilter(Exchange(str, n ,m))))));
+        if (F==1&&D==1) System.out.println(Min(ArifmeticFilter(GeometricFilter(Exchange(str, n ,m))))+"  " +Max(ArifmeticFilter(GeometricFilter(Exchange(str, n ,m)))));
+        if (F==1&&D==2) System.out.println(Min(Sredn(GeometricFilter(Exchange(str, n ,m))))+"  " +Max(Sredn(GeometricFilter(Exchange(str, n ,m)))));
         if (F==1&&D==3) ArifmeticFilter(GeometricFilter(Exchange(str, n ,m)));
-        if (F==1&&D==4) System.out.println(Max(MaxBrightness(GeometricFilter(Exchange(str, n ,m))))+Min((MaxBrightness(GeometricFilter(Exchange(str, n ,m))))));
+        if (F==1&&D==4) System.out.println(Min(MaxBrightness(GeometricFilter(Exchange(str, n ,m))))+"  " +Max((MaxBrightness(GeometricFilter(Exchange(str, n ,m))))));
 
     }
 
@@ -244,7 +244,7 @@ public class Main {
         double max=0;
         int maxx=0;
         int maxy=0;
-        for (int i = 1; i <mass.length ; i++) {
+        for (int i = 1; i <mass.length; i++) {
             for (int j = 1; j <mass[i].length ; j++) {
                 int R = 0;
                 int B = 0;
@@ -255,7 +255,7 @@ public class Main {
                 B = pixel.getBlue();
                 G = pixel.getGreen();
                 Y = 0.299 * R + 0.587 * G + 0.114 * B;
-                if (Y >= max) {
+                if (Y > max) {
                     max = Y;
                     maxx=i;
                     maxy=j;
